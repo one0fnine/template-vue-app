@@ -46,7 +46,7 @@ class APIClass {
 		}
 
 		this.__baseURL = this.$root.$config.apiBaseUrl
-		this.__uploadsURL = this.apiUploadsUrl
+		this.__uploadsURL = this.$root.$config.apiUploadUrl
 
 		this.__axios = axios.create({
 			baseURL: this.__baseURL,

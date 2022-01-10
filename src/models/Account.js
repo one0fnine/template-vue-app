@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from 'uuid'
 import RelationshipsItem from '@/models/RelationshipsItem'
+import Attachment from '@/models/Attachment'
 import User from '@/models/User'
 import Company from '@/models/Company'
 
@@ -19,6 +20,10 @@ export default class Account {
   _companyID = null;
 
   _company = new Company();
+	
+	_photo = new Attachment();
+	
+	_signedId = new Attachment();
 
   constructor(data, included) {
 		this.parseData(data)
@@ -35,13 +40,24 @@ export default class Account {
   }
   
   parseIncluded(included) {
-		if (this._userID) {
-			const userInc = included.find((inc) => inc.id === this._userID)
-			this.user = new User(userInc)
-		}
-		if (this._companyID) {
-			const companyInc = included.find((inc) => inc.id === this._companyID)
-			this.company = new Company(companyInc)
+		if (included) {
+			if (this._userID) {
+				const userInc = included.find((inc) => inc.id === this._userID)
+				this.user = new User(userInc)
+			}
+			if (this._companyID) {
+				const companyInc = included.find((inc) => inc.id === this._companyID)
+				this.company = new Company(companyInc)
+			}
+		
+			const attachments = included.find((cItem) => cItem.type === 'attachments')
+			if (attachments) {
+				this._photo.parseData(attachments)
+				this._signedId = this._photo.resource
+			} else {
+				this._photo = new Attachment()
+				this._signedId = ''
+			}
 		}
   }
 
@@ -74,6 +90,14 @@ export default class Account {
 	get company() { return this._company }
 	
 	set company(value) { this._company = value }
+	
+	get photo() { return this._photo }
+	
+	set photo(value) { this._photo = value }
+	
+	get signedId() { return this._signedId }
+	
+	set signedId(value) { this._signedId = value }
 
   toJSON() {
 		if (!this.userID) {
@@ -96,8 +120,8 @@ export default class Account {
 				password: this.password,
 			},
 			relationships: {
-				user: { data: user },
-				company: { data: company },
+				user: { data: user.toJSON() },
+				company: { data: company.toJSON() },
 			},
 		}
 	
@@ -126,25 +150,42 @@ export default class Account {
 		if (!this.companyID) {
 			this.companyID = uuidv4()
 		}
+	
+		if (this.signedId) {
+			this.photoData = {
+				id: this.photo.id,
+				type: 'attachments',
+				attributes: {
+					resource: this.signedId,
+					_destroy: this.photo._destroy,
+				},
+			}
+		}
 
 		const user = new RelationshipsItem('users', this.userID)
 		const company = new RelationshipsItem('companies', this.companyID)
+		const attachment = new RelationshipsItem('attachments', this.photo.id)
 	
 		this.user.id = this.userID
 		this.company.id = this.companyID
-		
+
 		const data = {
 			type: this.type,
 			id: this.id,
 			relationships: {
-				user: { data: user },
-				company: { data: company },
+				user: { data: user.toJSON() },
+				company: { data: company.toJSON() },
+				attachment: { data: attachment.toJSON() },
 			},
 		}
 		
 		const userInc = this.user.toUpdateJSON()
 		const companyInc = this.company.toUpdateJSON()
+	
 		const included = [userInc, companyInc]
+		if (this.signedId) {
+			included.push(this.photoData)
+		}
 		
 		return { data, included }
   }

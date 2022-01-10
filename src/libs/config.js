@@ -17,6 +17,7 @@ function parseConfigParam(value, fallback) {
 
 const config = {
 	apiBaseUrl: parseConfigParam(process.env.VUE_APP_BASE_API, 'http://localhost:8081'),
+	apiUploadUrl: parseConfigParam(process.env.VUE_APP_BASE_UPLOAD_API, 'http://localhost:8081'),
 	isDev: process.env.NODE_ENV === 'development',
 }
 

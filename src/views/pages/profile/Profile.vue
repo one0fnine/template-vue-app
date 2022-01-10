@@ -13,7 +13,13 @@
             <FormInputGroup :model.sync="account.company.name" label="Company Name" />
           </b-col>
           <b-col md="12" class="mb-2">
-            <FormImageGroup :model.sync="file" :image.sync="account.user.photo" label="Profile Image" />
+            <FormImageGroup
+              :key="updater"
+              :model="imagePreview"
+              label="Profile Image"
+              @update:image="onPickImage"
+              @delete:image="onDeleteImage"
+            />
           </b-col>
         </b-row>
       </b-col>
@@ -58,20 +64,36 @@ export default {
   data() {
     return {
 			file: null,
+      imagePreview: null,
+      updater: 0,
     }
   },
 	computed: {
-		account: {
-			get() {
-				return this.$store.getters['account/account']
-			},
-			set(data) {
-				this.$store.dispatch('account/setAccount', data)
-			},
+		account() {
+      return this.$store.getters['account/account']
 		},
 	},
-	methods: {
+  mounted() {
+    this.imagePreview = this.account.photo.previewResourceUrl
+    this.updater += 1
+  },
+  methods: {
+    onDeleteImage() {
+      this.account.photo._destroy = true
+    },
+
+    onPickImage(e) {
+      this.imagePreview = e.imageData
+      this.imageName = e.fileName
+      this.signedId = e.signedId
+      this.account.photo._destroy = false
+    },
+
 		async update() {
+      if (this.signedId) {
+        this.account.signedId = this.signedId
+      }
+      this.imageName = null
 			try {
 				await this.$store.dispatch('account/update', { data: this.account.toUpdateJSON() })
 			} catch (err) {

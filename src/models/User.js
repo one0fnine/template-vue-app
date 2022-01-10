@@ -1,3 +1,5 @@
+import Attachment from '@/models/Attachment'
+
 export default class User {
   _type = 'users'
 
@@ -9,7 +11,7 @@ export default class User {
 
   _lastName = null;
 
-  _phone = null;
+  _phone = new Attachment();
 
   constructor(data, included) {
     this.updateUser(data, included)
