@@ -7,7 +7,7 @@ import { getCurrentInstance } from '@vue/composition-api'
  * Used in @core files to handle absence of i18n without errors
  * @param {String} key i18n key to use for translation
  */
-export const t = key => {
+export const t = (key) => {
   const vm = getCurrentInstance().proxy
   return vm.$t ? vm.$t(key) : key
 }

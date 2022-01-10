@@ -185,6 +185,19 @@ export default {
       account: new Account(),
 		}
 	},
+	computed: {
+		passwordToggleIcon() {
+			return this.passwordFieldType === 'password' ? 'EyeIcon' : 'EyeOffIcon'
+		},
+		imgUrl() {
+			if (store.state.appConfig.layout.skin === 'dark') {
+        // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+				this.sideImg = require('@/assets/images/pages/register-v2-dark.svg')
+				return this.sideImg
+			}
+			return this.sideImg
+		},
+	},
   mounted() {
     this.v$.$touch()
   },
@@ -216,19 +229,6 @@ export default {
       },
     }
   },
-	computed: {
-		passwordToggleIcon() {
-			return this.passwordFieldType === 'password' ? 'EyeIcon' : 'EyeOffIcon'
-		},
-		imgUrl() {
-			if (store.state.appConfig.layout.skin === 'dark') {
-        // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-				this.sideImg = require('@/assets/images/pages/register-v2-dark.svg')
-				return this.sideImg
-			}
-			return this.sideImg
-		},
-	},
 	methods: {
     validateForm() {
       this.v$.$touch()
@@ -245,7 +245,7 @@ export default {
           this.$root.$storage.setItem('authorization', authResponse.authorization)
           this.$root.$api.token = authResponse.authorization
           this.$root.$auth.updateAuthUserData(authResponse.account, authResponse.authorization)
-          await this.$store.dispatch('account/setAccount', authResponse.account)
+          await this.$store.dispatch('account/setAccount', { data: authResponse.account })
           this.$router.push({ name: 'home' })
         }
 			} catch (error) {

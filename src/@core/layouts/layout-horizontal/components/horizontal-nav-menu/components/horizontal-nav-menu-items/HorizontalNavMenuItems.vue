@@ -28,7 +28,7 @@ export default {
     },
   },
   setup() {
-    const resolveNavComponent = item => {
+    const resolveNavComponent = (item) => {
       if (item.children) return 'horizontal-nav-menu-header-group'
       return 'horizontal-nav-menu-header-link'
     }

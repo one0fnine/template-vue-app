@@ -93,11 +93,10 @@ import {
 	BCardText, BCardTitle, BImg, BForm, BButton,
 } from 'bootstrap-vue'
 import { togglePasswordVisibility } from '@core/mixins/ui/forms'
-import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 import store from '@/store/index'
-import Account from '@/models/Account'
 import { useVuelidate } from '@vuelidate/core'
 import { email, required } from '@vuelidate/validators'
+import Account from '@/models/Account'
 
 export default {
   components: {
@@ -141,10 +140,10 @@ export default {
   computed: {
 		user: {
 			get() {
-				return this.$store.getters['account/account']
+				return this.$store.getters['user/user']
 			},
 			set(data) {
-				this.$store.dispatch('account/setAccount', data)
+				this.$store.dispatch('user/setUser', data)
 			},
 		},
     passwordToggleIcon() {
@@ -171,19 +170,11 @@ export default {
 			try {
 				const authResponse = await this.$root.$api.$sign.signIn(this.account.toLoginJSON())
 				if (authResponse) {
-					this.$toast({
-						component: ToastificationContent,
-						props: {
-							title: 'Form Submitted',
-							icon: 'EditIcon',
-							variant: 'success',
-						},
-					})
 					this.$root.$storage = localStorage
 					this.$root.$storage.setItem('authorization', authResponse.authorization)
 					this.$root.$api.token = authResponse.authorization
 					this.$root.$auth.updateAuthUserData(authResponse.account, authResponse.authorization)
-					await this.$store.dispatch('account/setAccount', authResponse.account)
+					await this.$store.dispatch('account/setAccount', { data: authResponse.account })
           this.$router.push({ name: 'home' })
 				}
 			} catch (error) {

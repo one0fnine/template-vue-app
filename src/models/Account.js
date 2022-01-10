@@ -21,13 +21,28 @@ export default class Account {
   _company = new Company();
 
   constructor(data, included) {
-		this.parseData(data, included)
+		this.parseData(data)
+		this.parseIncluded(included)
   }
 
   async parseData(data) {
     if (data) {
       this._id = data.id
+			this._email = data.attributes?.email
+			this._userID = data.relationships.user.data.id
+			this._companyID = data.relationships.company.data.id
     }
+  }
+  
+  parseIncluded(included) {
+		if (this._userID) {
+			const userInc = included.find((inc) => inc.id === this._userID)
+			this.user = new User(userInc)
+		}
+		if (this._companyID) {
+			const companyInc = included.find((inc) => inc.id === this._companyID)
+			this.company = new Company(companyInc)
+		}
   }
 
   get type() { return this._type }
@@ -63,15 +78,16 @@ export default class Account {
   toJSON() {
 		if (!this.userID) {
 			this.userID = uuidv4()
-			this.user.id = this.userID
 		}
 		if (!this.companyID) {
 			this.companyID = uuidv4()
-			this.company.id = this.companyID
 		}
 
 		const user = new RelationshipsItem('users', this.userID)
 		const company = new RelationshipsItem('companies', this.companyID)
+
+		this.company.id = this.companyID
+		this.user.id = this.userID
 	
 		const data = {
 			type: this.type,
@@ -101,5 +117,35 @@ export default class Account {
 			},
 		}
 		return { data }
+  }
+
+  toUpdateJSON() {
+		if (!this.userID) {
+			this.userID = uuidv4()
+		}
+		if (!this.companyID) {
+			this.companyID = uuidv4()
+		}
+
+		const user = new RelationshipsItem('users', this.userID)
+		const company = new RelationshipsItem('companies', this.companyID)
+	
+		this.user.id = this.userID
+		this.company.id = this.companyID
+		
+		const data = {
+			type: this.type,
+			id: this.id,
+			relationships: {
+				user: { data: user },
+				company: { data: company },
+			},
+		}
+		
+		const userInc = this.user.toUpdateJSON()
+		const companyInc = this.company.toUpdateJSON()
+		const included = [userInc, companyInc]
+		
+		return { data, included }
   }
 }

@@ -1,6 +1,6 @@
 import { isToday } from './utils'
 
-export const kFormatter = num => (num > 999 ? `${(num / 1000).toFixed(1)}k` : num)
+export const kFormatter = (num) => (num > 999 ? `${(num / 1000).toFixed(1)}k` : num)
 
 export const title = (value, replacer = ' ') => {
   if (!value) return ''
@@ -8,17 +8,17 @@ export const title = (value, replacer = ' ') => {
 
   const arr = str.split(replacer)
   const capitalizedArray = []
-  arr.forEach(word => {
+  arr.forEach((word) => {
     const capitalized = word.charAt(0).toUpperCase() + word.slice(1)
     capitalizedArray.push(capitalized)
   })
   return capitalizedArray.join(' ')
 }
 
-export const avatarText = value => {
+export const avatarText = (value) => {
   if (!value) return ''
   const nameArray = value.split(' ')
-  return nameArray.map(word => word.charAt(0).toUpperCase()).join('')
+  return nameArray.map((word) => word.charAt(0).toUpperCase()).join('')
 }
 
 /**
@@ -51,4 +51,4 @@ export const formatDateToMonthShort = (value, toTimeForCurrentDay = true) => {
 }
 
 // Strip all the tags from markup and return plain text
-export const filterTags = value => value.replace(/<\/?[^>]+(>|$)/g, '')
+export const filterTags = (value) => value.replace(/<\/?[^>]+(>|$)/g, '')

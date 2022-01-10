@@ -118,7 +118,7 @@ export default {
         this.$root.$api.token = tkn
         this.$root.$auth.updateAuthUserData(usr, tkn)
         this.$root.$isAuth = true
-        await this.$store.dispatch('user/getUser')
+        await this.$store.dispatch('account/detail')
       } else {
         this.$root.$auth.cleanData()
         this.$root.$isAuth = false

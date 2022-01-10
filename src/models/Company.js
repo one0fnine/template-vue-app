@@ -8,6 +8,10 @@ export default class Company {
   _consumer = false
 
   _producer = false
+	
+	_location = null
+	
+	_apiKey = null
 
   constructor(data, included) {
 		this.parseData(data, included)
@@ -16,6 +20,10 @@ export default class Company {
   async parseData(data) {
     if (data) {
       this._id = data.id
+			const attr = data.attributes
+			this._name = attr.name
+			this._location = attr.location
+			this._apiKey = attr.api_key
     }
   }
 
@@ -45,6 +53,16 @@ export default class Company {
 				name: this.name,
 				consumer: this.consumer,
 				producer: this.producer,
+			},
+		}
+  }
+
+  toUpdateJSON() {
+    return {
+			id: this.id,
+			type: this.type,
+			attributes: {
+				name: this.name,
 			},
 		}
   }

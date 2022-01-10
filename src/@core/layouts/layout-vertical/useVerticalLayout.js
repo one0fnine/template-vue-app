@@ -36,7 +36,7 @@ export default function useVerticalLayout(navbarType, footerType) {
   // ------------------------------------------------
   // Resize handler for Breakpoint
   // ------------------------------------------------
-  watch(currentBreakpoint, val => {
+  watch(currentBreakpoint, (val) => {
     isVerticalMenuActive.value = val === 'xl'
   })
 

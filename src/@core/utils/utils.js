@@ -2,9 +2,9 @@ import router from '@/router'
 // eslint-disable-next-line object-curly-newline
 import { reactive, getCurrentInstance, watch, toRefs } from '@vue/composition-api'
 
-export const isObject = obj => typeof obj === 'object' && obj !== null
+export const isObject = (obj) => typeof obj === 'object' && obj !== null
 
-export const isToday = date => {
+export const isToday = (date) => {
   const today = new Date()
   return (
     /* eslint-disable operator-linebreak */
@@ -15,13 +15,13 @@ export const isToday = date => {
   )
 }
 
-const getRandomFromArray = array => array[Math.floor(Math.random() * array.length)]
+const getRandomFromArray = (array) => array[Math.floor(Math.random() * array.length)]
 
 // ? Light and Dark variant is not included
 // prettier-ignore
 export const getRandomBsVariant = () => getRandomFromArray(['primary', 'secondary', 'success', 'warning', 'danger', 'info'])
 
-export const isDynamicRouteActive = route => {
+export const isDynamicRouteActive = (route) => {
   const { route: resolvedRoute } = router.resolve(route)
   return resolvedRoute.path === router.currentRoute.path
 }
@@ -35,7 +35,7 @@ export const useRouter = () => {
 
   watch(
     () => vm.$route,
-    r => {
+    (r) => {
       state.route = r
     },
   )

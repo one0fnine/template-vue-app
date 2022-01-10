@@ -4,22 +4,16 @@
       <b-col md="6">
         <b-row>
           <b-col md="6" class="mb-2">
-            <FormInputGroup :model.sync="user.username" label="Username" />
+            <FormInputGroup :model.sync="account.email" label="Email" disabled="disabled" />
           </b-col>
           <b-col md="6" class="mb-2">
-            <FormInputGroup :model.sync="user.email" label="Email" disabled="disabled" />
+            <FormInputGroup :model.sync="account.user.fullName" label="Full Name" />
           </b-col>
           <b-col md="6" class="mb-2">
-            <FormInputGroup :model.sync="user.firstName" label="First Name" />
-          </b-col>
-          <b-col md="6" class="mb-2">
-            <FormInputGroup :model.sync="user.lastName" label="Last Name" />
-          </b-col>
-          <b-col md="6" class="mb-2">
-            <FormInputGroup :model.sync="user.phone" label="Phone" />
+            <FormInputGroup :model.sync="account.company.name" label="Company Name" />
           </b-col>
           <b-col md="12" class="mb-2">
-            <FormImageGroup :model.sync="file" :image.sync="user.photo" label="Profile Image" />
+            <FormImageGroup :model.sync="file" :image.sync="account.user.photo" label="Profile Image" />
           </b-col>
         </b-row>
       </b-col>
@@ -49,7 +43,6 @@
 
 <script>
 import { BRow, BCol, BButton } from 'bootstrap-vue'
-import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 import FormInputGroup from '@/views/components/form/FormInputGroup.vue'
 import FormImageGroup from '@/views/components/form/FormImageGroup.vue'
 
@@ -68,27 +61,19 @@ export default {
     }
   },
 	computed: {
-		user: {
+		account: {
 			get() {
-				return this.$store.getters['user/user']
+				return this.$store.getters['account/account']
 			},
 			set(data) {
-				this.$store.dispatch('user/setUser', data)
+				this.$store.dispatch('account/setAccount', data)
 			},
 		},
 	},
 	methods: {
 		async update() {
 			try {
-				await this.$store.dispatch('user/updateUser', { data: this.user.toUpdateJSON() })
-				this.$toast({
-					component: ToastificationContent,
-					props: {
-						title: 'Form Submitted',
-						icon: 'EditIcon',
-						variant: 'success',
-					},
-				})
+				await this.$store.dispatch('account/update', { data: this.account.toUpdateJSON() })
 			} catch (err) {
 				console.log(err)
 			}

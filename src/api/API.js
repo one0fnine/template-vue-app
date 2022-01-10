@@ -6,6 +6,7 @@ import ErrorAPI from './ErrorAPI'
 import UploadsAPI from './UploadsAPI'
 import SignAPI from './SignAPI'
 import UserAPI from './UserAPI'
+import AccountAPI from './AccountAPI'
 
 class APIClass {
 	__storage = localStorage;
@@ -32,6 +33,8 @@ class APIClass {
 
 	__user = null;
 
+	__account = null;
+
 	init($root, token = '') {
 		if (this.__isInit) {
 			return
@@ -54,6 +57,7 @@ class APIClass {
 
 		this.__sign = new SignAPI(this)
 		this.__user = new UserAPI(this)
+		this.__account = new AccountAPI(this)
 
 		this.__allowEmptyToken = true
 	}
@@ -98,6 +102,11 @@ class APIClass {
 	 * @returns {UserAPI}
 	 */
 	get $user() { return this.__user }
+	
+	/**
+	 * @returns {AccountAPI}
+	 */
+	get $account() { return this.__account }
 
 	/**
 	 * @returns {UploadsAPI}

@@ -7,7 +7,7 @@ export default function useVerticalNavMenu(props) {
   // ------------------------------------------------
   const isVerticalMenuCollapsed = computed({
     get: () => store.state.verticalMenu.isVerticalMenuCollapsed,
-    set: val => {
+    set: (val) => {
       store.commit('verticalMenu/UPDATE_VERTICAL_MENU_COLLAPSED', val)
     },
   })
@@ -24,7 +24,7 @@ export default function useVerticalNavMenu(props) {
 
   const isMouseHovered = ref(false)
 
-  const updateMouseHovered = val => {
+  const updateMouseHovered = (val) => {
     isMouseHovered.value = val
   }
 
