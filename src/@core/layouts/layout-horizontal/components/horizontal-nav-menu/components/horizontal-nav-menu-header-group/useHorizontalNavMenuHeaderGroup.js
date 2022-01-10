@@ -7,7 +7,7 @@ export default function useHorizontalNavMenuHeaderGroup(item) {
   // ------------------------------------------------
   const isOpen = ref(false)
 
-  const updateGroupOpen = val => {
+  const updateGroupOpen = (val) => {
     // eslint-disable-next-line no-use-before-define
     isOpen.value = val
   }

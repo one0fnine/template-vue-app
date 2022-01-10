@@ -15,7 +15,7 @@ export default function useHorizontalNavMenuGroup(item) {
   // ------------------------------------------------
   const isOpen = ref(false)
 
-  const updateGroupOpen = val => {
+  const updateGroupOpen = (val) => {
     isOpen.value = val
     if (val) {
       nextTick(() => {

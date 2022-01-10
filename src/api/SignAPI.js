@@ -3,30 +3,30 @@ import ErrorAPI from './ErrorAPI'
 
 export default class SignAPI extends BasicAPI {
 	async signUp(regData) {
-		const response = await this.axios.post('/auth/sign_up', regData)
+		const response = await this.axios.post('/sign_up', regData)
 			.catch((error) => {
 				throw new ErrorAPI('$sign.signUp', error.response)
 			})
 
 		if (response.status === 200) {
 			return {
-				user: response.data.data,
-				authorization: response.data.authorization,
+				account: response.data.data,
+				authorization: response.headers.authorization,
 			}
 		}
 		return null
 	}
 
 	async signIn(data) {
-		const response = await this.axios.post('/auth/sign_in', data, {})
+		const response = await this.axios.post('/sign_in', data, {})
 			.catch((error) => {
 				throw new ErrorAPI('$sign.signIn', error.response)
 			})
 
 		if (response.status === 200) {
 			return {
-				user: response.data.data,
-				authorization: response.data.authorization,
+				account: response.data.data,
+				authorization: response.headers.authorization,
 			}
 		}
 
@@ -34,7 +34,7 @@ export default class SignAPI extends BasicAPI {
 	}
 
 	async signOut() {
-		const response = await this.axios.delete('/auth/sign_out', {}, {})
+		const response = await this.axios.delete('/sign_out', {}, {})
 			.catch((error) => {
 				this.checkIsTokenExpires(error, '$sign.signOut')
 				throw new ErrorAPI('$sign.signOut', error.response)

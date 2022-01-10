@@ -1,6 +1,9 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
+import auth from './routes/auth'
+import profile from './routes/profile'
+
 Vue.use(VueRouter)
 
 const router = new VueRouter({
@@ -44,6 +47,8 @@ const router = new VueRouter({
       path: '*',
       redirect: 'error-404',
     },
+		...profile,
+		...auth,
   ],
 })
 

@@ -21,86 +21,58 @@
           </b-card-text>
 
           <!-- form -->
-          <validation-observer ref="loginValidation">
-            <b-form class="auth-login-form mt-2" @submit.prevent>
-              <!-- email -->
-              <b-form-group label="Email" label-for="login-email">
-                <validation-provider
-                  #default="{ errors }"
-                  name="Email"
-                  rules="required|email"
-                >
-                  <b-form-input
-                    id="login-email"
-                    v-model="userEmail"
-                    :state="errors.length > 0 ? false:null"
-                    name="login-email"
-                    placeholder="john@example.com"
-                  />
-                  <small class="text-danger">{{ errors[0] }}</small>
-                </validation-provider>
-              </b-form-group>
+          <b-form class="auth-login-form mt-2" @submit.prevent>
+            <!-- email -->
+            <b-form-group label="Email" label-for="login-email">
+              <b-form-input
+                id="login-email"
+                v-model="account.email"
+                :state="!v$.account.email.$error"
+                name="login-email"
+                placeholder="john@example.com"
+              />
+            </b-form-group>
 
-              <!-- forgot password -->
-              <b-form-group>
-                <div class="d-flex justify-content-between">
-                  <label for="login-password">Password</label>
-                  <b-link :to="{name:'auth-forgot-password-v2'}">
-                    <small>Forgot Password?</small>
-                  </b-link>
-                </div>
-                <validation-provider
-                  #default="{ errors }"
-                  name="Password"
-                  rules="required"
-                >
-                  <b-input-group
-                    class="input-group-merge"
-                    :class="errors.length > 0 ? 'is-invalid':null"
-                  >
-                    <b-form-input
-                      id="login-password"
-                      v-model="password"
-                      :state="errors.length > 0 ? false:null"
-                      class="form-control-merge"
-                      :type="passwordFieldType"
-                      name="login-password"
-                      placeholder="············"
-                    />
-                    <b-input-group-append is-text>
-                      <feather-icon
-                        class="cursor-pointer"
-                        :icon="passwordToggleIcon"
-                        @click="togglePasswordVisibility"
-                      />
-                    </b-input-group-append>
-                  </b-input-group>
-                  <small class="text-danger">{{ errors[0] }}</small>
-                </validation-provider>
-              </b-form-group>
-
-              <!-- checkbox -->
-              <b-form-group>
-                <b-form-checkbox
-                  id="remember-me"
-                  v-model="status"
-                  name="checkbox-1"
-                >
-                  Remember Me
-                </b-form-checkbox>
-              </b-form-group>
-
-              <!-- submit buttons -->
-              <b-button
-                type="submit"
-                variant="primary"
-                block
-                @click="validationForm"
+            <!-- forgot password -->
+            <b-form-group>
+              <div class="d-flex justify-content-between">
+                <label for="login-password">Password</label>
+                <b-link :to="{name:'auth-forgot-password-v2'}">
+                  <small>Forgot Password?</small>
+                </b-link>
+              </div>
+              <b-input-group
+                class="input-group-merge"
               >
-                Sign in
-              </b-button>
-            </b-form>
-          </validation-observer>
+                <b-form-input
+                  id="login-password"
+                  v-model="account.password"
+                  :state="!v$.account.password.$error"
+                  class="form-control-merge"
+                  :type="passwordFieldType"
+                  name="login-password"
+                  placeholder="············"
+                />
+                <b-input-group-append is-text>
+                  <feather-icon
+                    class="cursor-pointer"
+                    :icon="passwordToggleIcon"
+                    @click="togglePasswordVisibility"
+                  />
+                </b-input-group-append>
+              </b-input-group>
+            </b-form-group>
+
+            <!-- submit buttons -->
+            <b-button
+              type="button"
+              variant="primary"
+              block
+              @click="handleFormSubmit"
+            >
+              Sign in
+            </b-button>
+          </b-form>
 
           <b-card-text class="text-center mt-2">
             <span>New on our platform? </span>
@@ -108,29 +80,6 @@
               <span>&nbsp;Create an account</span>
             </b-link>
           </b-card-text>
-
-          <!-- divider -->
-          <div class="divider my-2">
-            <div class="divider-text">
-              or
-            </div>
-          </div>
-
-          <!-- social buttons -->
-          <div class="auth-footer-btn d-flex justify-content-center">
-            <b-button variant="facebook">
-              <feather-icon icon="FacebookIcon" />
-            </b-button>
-            <b-button variant="twitter">
-              <feather-icon icon="TwitterIcon" />
-            </b-button>
-            <b-button variant="google">
-              <feather-icon icon="MailIcon" />
-            </b-button>
-            <b-button variant="github">
-              <feather-icon icon="GithubIcon" />
-            </b-button>
-          </div>
         </b-col>
       </b-col>
     <!-- /Login-->
@@ -139,16 +88,16 @@
 </template>
 
 <script>
-/* eslint-disable global-require */
-import { ValidationProvider, ValidationObserver } from 'vee-validate'
 import {
-	BRow, BCol, BLink, BFormGroup, BFormInput, BInputGroupAppend, BInputGroup, BFormCheckbox,
+	BRow, BCol, BLink, BFormGroup, BFormInput, BInputGroupAppend, BInputGroup,
 	BCardText, BCardTitle, BImg, BForm, BButton,
 } from 'bootstrap-vue'
-import { required, email } from '@validations'
 import { togglePasswordVisibility } from '@core/mixins/ui/forms'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 import store from '@/store/index'
+import Account from '@/models/Account'
+import { useVuelidate } from '@vuelidate/core'
+import { email, required } from '@vuelidate/validators'
 
 export default {
   components: {
@@ -159,33 +108,43 @@ export default {
     BFormInput,
     BInputGroupAppend,
     BInputGroup,
-    BFormCheckbox,
     BCardText,
     BCardTitle,
     BImg,
     BForm,
     BButton,
-    ValidationProvider,
-    ValidationObserver,
   },
   mixins: [togglePasswordVisibility],
   data() {
     return {
-      status: '',
-      password: '',
-      userEmail: '',
+      /* eslint-disable global-require */
       sideImg: require('@/assets/images/pages/login-v2.svg'),
-      required,
-      email,
+      account: new Account(),
+    }
+  },
+  setup: () => ({ v$: useVuelidate() }),
+  validations() {
+    return {
+      account: {
+        email: {
+          required,
+          email,
+          $autoDirty: true,
+        },
+        password: {
+          required,
+          $autoDirty: true,
+        },
+      },
     }
   },
   computed: {
 		user: {
 			get() {
-				return this.$store.getters['user/user']
+				return this.$store.getters['account/account']
 			},
 			set(data) {
-				this.$store.dispatch('user/setUser', data)
+				this.$store.dispatch('account/setAccount', data)
 			},
 		},
     passwordToggleIcon() {
@@ -201,25 +160,16 @@ export default {
     },
   },
   methods: {
-    validationForm() {
-      this.$refs.loginValidation.validate().then((success) => {
-        if (success) {
-					this.handleFormSubmit()
-        }
-      })
+    validateForm() {
+      this.v$.$touch()
+      return this.v$.$anyDirty && !this.v$.$invalid
     },
 		async handleFormSubmit() {
+      if (!this.validateForm()) {
+        return
+      }
 			try {
-				const data = {
-					data: {
-						type: 'users',
-						attributes: {
-							email: this.userEmail.trim(),
-							password: this.password.trim(),
-						},
-					},
-				}
-				const authResponse = await this.$root.$api.$sign.signIn(data)
+				const authResponse = await this.$root.$api.$sign.signIn(this.account.toLoginJSON())
 				if (authResponse) {
 					this.$toast({
 						component: ToastificationContent,
@@ -232,12 +182,9 @@ export default {
 					this.$root.$storage = localStorage
 					this.$root.$storage.setItem('authorization', authResponse.authorization)
 					this.$root.$api.token = authResponse.authorization
-					this.$root.$auth.updateAuthUserData(authResponse.user, authResponse.authorization)
-					await this.$store.dispatch('settings/get')
-					await this.$store.dispatch('user/setUser', authResponse.user)
-					this.$store.dispatch('children/setChildList', this.user.children)
-					this.$store.dispatch('children/setChild', this.user.children ? this.user.children[0] : [])
-					this.$router.push('/articles')
+					this.$root.$auth.updateAuthUserData(authResponse.account, authResponse.authorization)
+					await this.$store.dispatch('account/setAccount', authResponse.account)
+          this.$router.push({ name: 'home' })
 				}
 			} catch (error) {
 				console.log(error)

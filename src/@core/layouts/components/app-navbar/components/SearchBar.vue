@@ -178,13 +178,13 @@ export default {
       filteredData,
     } = useAutoSuggest({ data: searchAndBookmarkData, searchLimit: 4 })
 
-    watch(searchQuery, val => {
+    watch(searchQuery, (val) => {
       store.commit('app/TOGGLE_OVERLAY', Boolean(val))
     })
 
     const currentSelected = ref(-1)
-    watch(filteredData, val => {
-      if (!Object.values(val).some(obj => obj.length)) {
+    watch(filteredData, (val) => {
+      if (!Object.values(val).some((obj) => obj.length)) {
         currentSelected.value = -1
       } else {
         // Auto Select first item if it's not item-404
@@ -206,7 +206,7 @@ export default {
       /* eslint-disable no-lonely-if, no-plusplus */
 
       // If there's no matching items
-      if (!Object.values(filteredData.value).some(grpItems => grpItems.length)) return
+      if (!Object.values(filteredData.value).some((grpItems) => grpItems.length)) return
 
       const [grpIndex, itemIndex] = currentSelected.value.split('.')
 

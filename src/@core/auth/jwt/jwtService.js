@@ -19,7 +19,7 @@ export default class JwtService {
 
     // Request Interceptor
     this.axiosIns.interceptors.request.use(
-      config => {
+      (config) => {
         // Get token from localStorage
         const accessToken = this.getToken()
 
@@ -30,13 +30,13 @@ export default class JwtService {
         }
         return config
       },
-      error => Promise.reject(error),
+      (error) => Promise.reject(error),
     )
 
     // Add request/response interceptor
     this.axiosIns.interceptors.response.use(
-      response => response,
-      error => {
+      (response) => response,
+      (error) => {
         // const { config, response: { status } } = error
         const { config, response } = error
         const originalRequest = config
@@ -45,7 +45,7 @@ export default class JwtService {
         if (response && response.status === 401) {
           if (!this.isAlreadyFetchingAccessToken) {
             this.isAlreadyFetchingAccessToken = true
-            this.refreshToken().then(r => {
+            this.refreshToken().then((r) => {
               this.isAlreadyFetchingAccessToken = false
 
               // Update accessToken in localStorage
@@ -55,8 +55,8 @@ export default class JwtService {
               this.onAccessTokenFetched(r.data.accessToken)
             })
           }
-          const retryOriginalRequest = new Promise(resolve => {
-            this.addSubscriber(accessToken => {
+          const retryOriginalRequest = new Promise((resolve) => {
+            this.addSubscriber((accessToken) => {
               // Make sure to assign accessToken according to your response.
               // Check: https://pixinvent.ticksy.com/ticket/2413870
               // Change Authorization header
@@ -72,7 +72,7 @@ export default class JwtService {
   }
 
   onAccessTokenFetched(accessToken) {
-    this.subscribers = this.subscribers.filter(callback => callback(accessToken))
+    this.subscribers = this.subscribers.filter((callback) => callback(accessToken))
   }
 
   addSubscriber(callback) {

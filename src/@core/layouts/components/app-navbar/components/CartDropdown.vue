@@ -141,21 +141,21 @@ export default {
   computed: {
     totalAmount() {
       let total = 0
-      this.items.forEach(i => { total += i.price })
+      this.items.forEach((i) => { total += i.price })
       return total
     },
   },
   methods: {
     fetchItems() {
       this.$store.dispatch('app-ecommerce/fetchCartProducts')
-        .then(response => {
+        .then((response) => {
           this.items = response.data.products
         })
     },
     removeItemFromCart(productId) {
       this.$store.dispatch('app-ecommerce/removeProductFromCart', { productId })
         .then(() => {
-          const itemIndex = this.items.findIndex(p => p.id === productId)
+          const itemIndex = this.items.findIndex((p) => p.id === productId)
           this.items.splice(itemIndex, 1)
 
           // Update count in cart items state

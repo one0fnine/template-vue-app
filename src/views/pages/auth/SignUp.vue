@@ -36,156 +36,116 @@
           </b-card-text>
 
           <!-- form -->
-          <validation-observer
-            ref="registerForm"
-            #default="{invalid}"
+          <b-form
+            class="auth-register-form mt-2"
           >
-            <b-form
-              class="auth-register-form mt-2"
-              @submit.prevent="register"
+            <!-- fullName -->
+            <b-form-group
+              label="Full Name"
+              label-for="register-full-name"
             >
-              <!-- username -->
-              <b-form-group
-                label="Username"
-                label-for="register-username"
+              <b-form-input
+                id="register-full-name"
+                v-model="account.user.fullName"
+                :state="!v$.account.user.fullName.$error"
+                name="register-full-name"
+                placeholder="johndoe"
+              />
+            </b-form-group>
+
+            <!-- Company Name -->
+            <b-form-group
+              label="Company Name"
+              label-for="register-company-name"
+            >
+              <b-form-input
+                id="register-company-name"
+                v-model="account.company.name"
+                :state="!v$.account.company.name.$error"
+                name="register-company-name"
+              />
+            </b-form-group>
+
+            <!-- Company Consumer -->
+            <b-form-group>
+              <b-form-checkbox
+                id="register-company-consumer"
+                v-model="account.company.consumer"
+                name="checkbox-consumer"
               >
-                <validation-provider
-                  #default="{ errors }"
-                  name="Username"
-                  vid="username"
-                  rules="required"
-                >
-                  <b-form-input
-                    id="register-username"
-                    v-model="username"
-                    name="register-username"
-                    :state="errors.length > 0 ? false:null"
-                    placeholder="johndoe"
+                Consumer
+              </b-form-checkbox>
+            </b-form-group>
+
+            <!-- Company Producer -->
+            <b-form-group>
+              <b-form-checkbox
+                id="register-company-producer"
+                v-model="account.company.producer"
+                name="checkbox-producer"
+              >
+                Producer
+              </b-form-checkbox>
+            </b-form-group>
+
+            <!-- email -->
+            <b-form-group
+              label="Email"
+              label-for="register-email"
+            >
+              <b-form-input
+                id="register-email"
+                v-model="account.email"
+                :state="!v$.account.email.$error"
+                name="register-email"
+                placeholder="john@example.com"
+              />
+            </b-form-group>
+
+            <!-- password -->
+            <b-form-group
+              label-for="register-password"
+              label="Password"
+            >
+              <b-input-group
+                class="input-group-merge"
+              >
+                <b-form-input
+                  id="register-password"
+                  v-model="account.password"
+                  :state="!v$.account.password.$error"
+                  class="form-control-merge"
+                  :type="passwordFieldType"
+                  name="register-password"
+                  placeholder="············"
+                />
+                <b-input-group-append is-text>
+                  <feather-icon
+                    :icon="passwordToggleIcon"
+                    class="cursor-pointer"
+                    @click="togglePasswordVisibility"
                   />
-                  <small class="text-danger">{{ errors[0] }}</small>
-                </validation-provider>
-              </b-form-group>
+                </b-input-group-append>
+              </b-input-group>
+            </b-form-group>
 
-              <!-- email -->
-              <b-form-group
-                label="Email"
-                label-for="register-email"
-              >
-                <validation-provider
-                  #default="{ errors }"
-                  name="Email"
-                  vid="email"
-                  rules="required|email"
-                >
-                  <b-form-input
-                    id="register-email"
-                    v-model="userEmail"
-                    name="register-email"
-                    :state="errors.length > 0 ? false:null"
-                    placeholder="john@example.com"
-                  />
-                  <small class="text-danger">{{ errors[0] }}</small>
-                </validation-provider>
-              </b-form-group>
-
-              <!-- password -->
-              <b-form-group
-                label-for="register-password"
-                label="Password"
-              >
-                <validation-provider
-                  #default="{ errors }"
-                  name="Password"
-                  vid="password"
-                  rules="required"
-                >
-                  <b-input-group
-                    class="input-group-merge"
-                    :class="errors.length > 0 ? 'is-invalid':null"
-                  >
-                    <b-form-input
-                      id="register-password"
-                      v-model="password"
-                      class="form-control-merge"
-                      :type="passwordFieldType"
-                      :state="errors.length > 0 ? false:null"
-                      name="register-password"
-                      placeholder="············"
-                    />
-                    <b-input-group-append is-text>
-                      <feather-icon
-                        :icon="passwordToggleIcon"
-                        class="cursor-pointer"
-                        @click="togglePasswordVisibility"
-                      />
-                    </b-input-group-append>
-                  </b-input-group>
-                  <small class="text-danger">{{ errors[0] }}</small>
-                </validation-provider>
-              </b-form-group>
-
-              <b-form-group>
-                <b-form-checkbox
-                  id="register-privacy-policy"
-                  v-model="status"
-                  name="checkbox-1"
-                >
-                  I agree to
-                  <b-link>privacy policy & terms</b-link>
-                </b-form-checkbox>
-              </b-form-group>
-
-              <b-button
-                variant="primary"
-                block
-                type="submit"
-                :disabled="invalid"
-              >
-                Sign up
-              </b-button>
-            </b-form>
-          </validation-observer>
+            <b-button
+              variant="primary"
+              block
+              type="button"
+              :disabled="invalid"
+              @click="handleFormSubmit"
+            >
+              Sign up
+            </b-button>
+          </b-form>
 
           <p class="text-center mt-2">
             <span>Already have an account?</span>
-            <b-link :to="{name:'auth-login'}">
+            <b-link :to="{name:'sign_in'}">
               <span>&nbsp;Sign in instead</span>
             </b-link>
           </p>
-
-          <!-- divider -->
-          <div class="divider my-2">
-            <div class="divider-text">
-              or
-            </div>
-          </div>
-
-          <div class="auth-footer-btn d-flex justify-content-center">
-            <b-button
-              variant="facebook"
-              href="javascript:void(0)"
-            >
-              <feather-icon icon="FacebookIcon" />
-            </b-button>
-            <b-button
-              variant="twitter"
-              href="javascript:void(0)"
-            >
-              <feather-icon icon="TwitterIcon" />
-            </b-button>
-            <b-button
-              variant="google"
-              href="javascript:void(0)"
-            >
-              <feather-icon icon="MailIcon" />
-            </b-button>
-            <b-button
-              variant="github"
-              href="javascript:void(0)"
-            >
-              <feather-icon icon="GithubIcon" />
-            </b-button>
-          </div>
         </b-col>
       </b-col>
       <!-- /Register-->
@@ -194,14 +154,12 @@
 </template>
 
 <script>
-/* eslint-disable global-require */
-import { ValidationProvider, ValidationObserver } from 'vee-validate'
-import {
-	BRow, BCol, BLink, BButton, BForm, BFormCheckbox, BFormGroup, BFormInput, BInputGroup, BInputGroupAppend, BImg, BCardTitle, BCardText,
-} from 'bootstrap-vue'
-import { required, email } from '@validations'
+import { required, email } from '@vuelidate/validators'
+import { useVuelidate } from '@vuelidate/core'
+import { BRow, BCol, BLink, BButton, BForm, BFormCheckbox, BFormGroup, BFormInput, BInputGroup, BInputGroupAppend, BImg, BCardTitle, BCardText } from 'bootstrap-vue'
 import { togglePasswordVisibility } from '@core/mixins/ui/forms'
 import store from '@/store/index'
+import Account from '@/models/Account'
 
 export default {
 	components: {
@@ -218,30 +176,53 @@ export default {
 		BFormInput,
 		BInputGroup,
 		BInputGroupAppend,
-		// validations
-		ValidationProvider,
-		ValidationObserver,
 	},
 	mixins: [togglePasswordVisibility],
 	data() {
 		return {
-			status: '',
-			username: '',
-			userEmail: '',
-			password: '',
+      /* eslint-disable global-require */
 			sideImg: require('@/assets/images/pages/register-v2.svg'),
-			// validation
-			required,
-			email,
+      account: new Account(),
 		}
 	},
+  mounted() {
+    this.v$.$touch()
+  },
+  setup: () => ({ v$: useVuelidate() }),
+  validations() {
+    return {
+      account: {
+        user: {
+          fullName: {
+            required,
+            $autoDirty: true,
+          },
+        },
+        company: {
+          name: {
+            required,
+            $autoDirty: true,
+          },
+        },
+        email: {
+          required,
+          email,
+          $autoDirty: true,
+        },
+        password: {
+          required,
+          $autoDirty: true,
+        },
+      },
+    }
+  },
 	computed: {
 		passwordToggleIcon() {
 			return this.passwordFieldType === 'password' ? 'EyeIcon' : 'EyeOffIcon'
 		},
 		imgUrl() {
 			if (store.state.appConfig.layout.skin === 'dark') {
-				// eslint-disable-next-line vue/no-side-effects-in-computed-properties
+        // eslint-disable-next-line vue/no-side-effects-in-computed-properties
 				this.sideImg = require('@/assets/images/pages/register-v2-dark.svg')
 				return this.sideImg
 			}
@@ -249,37 +230,24 @@ export default {
 		},
 	},
 	methods: {
-		register() {
-			this.$refs.registerForm.validate().then((success) => {
-				if (success) {
-					this.handleFormSubmit()
-				}
-			})
-		},
+    validateForm() {
+      this.v$.$touch()
+      return this.v$.$anyDirty && !this.v$.$invalid
+    },
 		async handleFormSubmit() {
+      if (!this.validateForm()) {
+        return
+      }
 			try {
-				const data = {
-					data: {
-						type: 'users',
-						attributes: {
-							username: this.username,
-							email: this.userEmail.trim(),
-							password: this.password.trim(),
-						},
-					},
-				}
-				const authResponse = await this.$root.$api.$sign.signUp(data)
-				if (authResponse) {
-					const loginResponse = await this.$root.$api.$sign.signIn(data)
-					if (loginResponse) {
-						this.$root.$storage = localStorage
-						this.$root.$storage.setItem('authorization', loginResponse.authorization)
-						this.$root.$api.token = loginResponse.authorization
-						this.$root.$auth.updateAuthUserData(loginResponse.user, loginResponse.authorization)
-						this.$store.dispatch('user/setUser', loginResponse.user.data)
-						this.$router.push({ name: 'home' })
-					}
-				}
+				const authResponse = await this.$root.$api.$sign.signUp(this.account.toJSON())
+        if (authResponse) {
+          this.$root.$storage = localStorage
+          this.$root.$storage.setItem('authorization', authResponse.authorization)
+          this.$root.$api.token = authResponse.authorization
+          this.$root.$auth.updateAuthUserData(authResponse.account, authResponse.authorization)
+          await this.$store.dispatch('account/setAccount', authResponse.account)
+          this.$router.push({ name: 'home' })
+        }
 			} catch (error) {
 				console.log(error)
 			}

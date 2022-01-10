@@ -21,7 +21,10 @@ import useAppConfig from '@core/app-config/useAppConfig'
 
 import { useWindowSize, useCssVar } from '@vueuse/core'
 
+import API from '@/api/API'
+import AuthAPI from '@/api/AuthAPI'
 import store from '@/store'
+import { config } from './libs/config'
 
 const LayoutVertical = () => import('@/layouts/vertical/LayoutVertical.vue')
 const LayoutHorizontal = () => import('@/layouts/horizontal/LayoutHorizontal.vue')
@@ -89,13 +92,38 @@ export default {
     // Set Window Width in store
     store.commit('app/UPDATE_WINDOW_WIDTH', window.innerWidth)
     const { width: windowWidth } = useWindowSize()
-    watch(windowWidth, val => {
+    watch(windowWidth, (val) => {
       store.commit('app/UPDATE_WINDOW_WIDTH', val)
     })
 
     return {
       skinClasses,
     }
+  },
+  created() {
+    this.$root.$config = config
+    this.$root.$user = null
+    this.$root.$api = API
+    this.$root.$api.init(this.$root)
+    this.$root.$auth = new AuthAPI(this.$root.$api)
+    this.$root.$isAuth = false
+    this.restoreUser()
+  },
+
+  methods: {
+    async restoreUser() {
+      const usr = this.$root.$auth.restoreData()
+      if (usr) {
+        const tkn = this.$root.$auth.readToken
+        this.$root.$api.token = tkn
+        this.$root.$auth.updateAuthUserData(usr, tkn)
+        this.$root.$isAuth = true
+        await this.$store.dispatch('user/getUser')
+      } else {
+        this.$root.$auth.cleanData()
+        this.$root.$isAuth = false
+      }
+    },
   },
 }
 </script>

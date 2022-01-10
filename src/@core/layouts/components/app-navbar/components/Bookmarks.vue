@@ -98,7 +98,7 @@ export default {
   },
   setup() {
     const searchAndBookmarkDataPages = ref(searchAndBookmarkData.pages)
-    const bookmarks = ref(searchAndBookmarkData.pages.data.filter(page => page.isBookmarked))
+    const bookmarks = ref(searchAndBookmarkData.pages.data.filter((page) => page.isBookmarked))
     const currentSelected = ref(-1)
 
     const perfectScrollbarSettings = {
@@ -111,11 +111,11 @@ export default {
       filteredData,
     } = useAutoSuggest({ data: { pages: searchAndBookmarkDataPages.value }, searchLimit: 6 })
 
-    watch(searchQuery, val => {
+    watch(searchQuery, (val) => {
       store.commit('app/TOGGLE_OVERLAY', Boolean(val))
     })
 
-    watch(filteredData, val => {
+    watch(filteredData, (val) => {
       currentSelected.value = val.pages && !val.pages.length ? -1 : 0
     })
 
@@ -125,9 +125,9 @@ export default {
       resetsearchQuery()
     }
 
-    const toggleBookmarked = item => {
+    const toggleBookmarked = (item) => {
       // Find Index of item/page in bookmarks' array
-      const pageIndexInBookmarks = bookmarks.value.findIndex(i => i.route === item.route)
+      const pageIndexInBookmarks = bookmarks.value.findIndex((i) => i.route === item.route)
 
       // If index is > -1 => Item is bookmarked => Remove item from bookmarks array using index
       // Else => Item is not bookmarked => Add item to bookmarks' array
