@@ -13,6 +13,8 @@ export default class Company {
 
 	_apiKey = null
 
+	_social = null
+
   constructor(data, included) {
 		this.parseData(data, included)
   }
@@ -24,6 +26,7 @@ export default class Company {
 			this._name = attr.name
 			this._location = attr.location
 			this._apiKey = attr.api_key
+			this._social = attr.social_profiles
     }
   }
 
@@ -45,25 +48,36 @@ export default class Company {
 
   set producer(value) { this._producer = value }
 
-  toJSON() {
+  get location() { return this._location }
+
+  set location(value) { this._location = value }
+
+  get social() { return this._social }
+
+  set social(value) { this._social = value }
+
+  toJSON(attributes) {
     return {
-      type: this.type,
-			id: this.id,
-			attributes: {
-				name: this.name,
-				consumer: this.consumer,
-				producer: this.producer,
-			},
-		}
+      data: {
+        type: this.type,
+        attributes: {
+          name: this.name,
+          ...attributes,
+        },
+      },
+    }
   }
 
-  toUpdateJSON() {
+  toUpdateJSON(attributes) {
     return {
-      type: this.type,
-			id: this.id,
-			attributes: {
-				name: this.name,
-			},
-		}
+      data: {
+        type: this.type,
+        id: this.id,
+        attributes: {
+          name: this.name,
+          ...attributes,
+        },
+      },
+    }
   }
 }

@@ -6,7 +6,7 @@ import app from './app'
 import appConfig from './app-config'
 import verticalMenu from './vertical-menu'
 import account from './account'
-import user from './user'
+import company from './company'
 
 Vue.use(Vuex)
 
@@ -16,7 +16,7 @@ export default new Vuex.Store({
     appConfig,
     verticalMenu,
 		account,
-		user,
+    company,
   },
   strict: process.env.DEV,
 })

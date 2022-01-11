@@ -5,7 +5,7 @@ import axios from 'axios'
 import ErrorAPI from './ErrorAPI'
 import UploadsAPI from './UploadsAPI'
 import SignAPI from './SignAPI'
-import UserAPI from './UserAPI'
+import CompanyAPI from './CompanyAPI'
 import AccountAPI from './AccountAPI'
 
 class APIClass {
@@ -31,9 +31,9 @@ class APIClass {
 
 	__sign = null;
 
-	__user = null;
-
 	__account = null;
+
+	__company = null;
 
 	init($root, token = '') {
 		if (this.__isInit) {
@@ -56,8 +56,8 @@ class APIClass {
 		this.__uploads = new UploadsAPI(this)
 
 		this.__sign = new SignAPI(this)
-		this.__user = new UserAPI(this)
 		this.__account = new AccountAPI(this)
+		this.__company = new CompanyAPI(this)
 
 		this.__allowEmptyToken = true
 	}
@@ -99,14 +99,14 @@ class APIClass {
 	get axios() { return this.__axios }
 
 	/**
-	 * @returns {UserAPI}
-	 */
-	get $user() { return this.__user }
-	
-	/**
 	 * @returns {AccountAPI}
 	 */
 	get $account() { return this.__account }
+
+	/**
+	 * @returns {AccountAPI}
+	 */
+	get $company() { return this.__company }
 
 	/**
 	 * @returns {UploadsAPI}

@@ -229,12 +229,12 @@ export default {
     }
   },
 	methods: {
-    validateForm() {
+    validate() {
       this.v$.$touch()
       return this.v$.$anyDirty && !this.v$.$invalid
     },
 		async handleFormSubmit() {
-      if (!this.validateForm()) {
+      if (!this.validate()) {
         return
       }
 			try {

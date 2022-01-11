@@ -1,11 +1,12 @@
 <template>
   <b-form-group :label="label">
     <b-input-group>
-      <template v-if="hasAppendSlot" #append>
+      <template v-if="hasSlotAppend" #append>
         <slot name="append" />
       </template>
       <b-form-input
         v-model="model"
+        :state="state"
         @input="update"
       />
     </b-input-group>
@@ -24,13 +25,17 @@ export default {
 			type: String,
 			required: true,
 		},
+		state: {
+			type: Boolean,
+			default: true,
+		},
 		label: {
 			type: String,
 			default: '',
 		},
 	},
 	computed: {
-		hasAppendSlot() {
+    hasSlotAppend() {
 			return this.$slots.append != null
 		},
 	},
