@@ -1,12 +1,19 @@
 <template>
-  <b-form-group :label="label">
+  <b-form-group :label="label" class="form-image-group">
     <b-media no-body vertical-align="center" class="flex-column flex-md-row">
-      <b-media-aside>
+      <b-media-aside class="position-relative mr-2">
         <b-img
           :src="imagePreview"
           height="110"
           width="170"
-          class="rounded mr-2 mb-1 mb-md-0"
+          class="rounded mb-1 mb-md-0"
+        />
+        <feather-icon
+          v-if="imagePreview"
+          icon="XCircleIcon"
+          size="21"
+          class="form-image-group__remove"
+          @click="onRemoveImage"
         />
       </b-media-aside>
       <b-media-body>
@@ -41,10 +48,14 @@ export default {
 		},
 	},
   data() {
-    console.log(this.model)
     return {
       imagePreview: this.model || null,
     }
+  },
+  watch: {
+    model() {
+      this.imagePreview = this.model
+    },
   },
 	methods: {
     onRemoveImage() {
@@ -55,8 +66,8 @@ export default {
 
     async uploadImage() {
       if (this.imageName && this.imagePreview) {
-        const avatar = await this.uploadDirect(this.imageName, this.imagePreview)
-        this.signedId = avatar.data.attributes.signed_id
+        const image = await this.uploadDirect(this.imageName, this.imagePreview)
+        this.resource = image.data.attributes.signed_id
         this.imageName = null
       }
     },
@@ -75,14 +86,13 @@ export default {
       this.$emit('load:image', false)
       await this.uploadImage()
       const val = {
-        imageData: this.imagePreview,
-        fileName: this.imageName,
-        signedId: this.signedId,
+        url: this.imagePreview,
+        resource: this.resource,
         w: this.imageW,
         h: this.imageH,
       }
-      this.$emit('update:modelValue', val.imageData)
-      this.$emit('input', val.imageData)
+      this.$emit('update:modelValue', val.url)
+      this.$emit('input', val.url)
       this.$emit('update:image', val)
       this.$emit('load:image', true)
     },
@@ -120,5 +130,20 @@ export default {
 </script>
 
 <style lang="scss">
-@import '@core/scss/vue/libs/quill.scss';
+@import '@core/scss/base/colors.scss';
+
+.form-image-group {
+  &__remove {
+    color: $danger;
+    position: absolute;
+    right: -10px;
+    top: -10px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+
+    &:hover {
+      transform: scale(1.2);
+    }
+  }
+}
 </style>

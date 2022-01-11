@@ -8,10 +8,7 @@
           class="nav-link"
           @click="toggleVerticalMenuActive"
         >
-          <feather-icon
-            icon="MenuIcon"
-            size="21"
-          />
+          <feather-icon icon="MenuIcon" size="21" />
         </b-link>
       </li>
     </ul>
@@ -30,15 +27,15 @@
         <template #button-content>
           <div class="d-sm-flex d-none user-nav">
             <p class="user-name font-weight-bolder mb-0">
-              {{ user.username }}
+              {{ user.fullName }}
             </p>
             <span class="user-status">{{ user.firstName }} {{ user.lastName }}</span>
           </div>
           <b-avatar
+            badge
+            :src="account.image.url"
             size="40"
             variant="light-primary"
-            badge
-            :src="user.photo"
             class="badge-minimal"
             badge-variant="success"
           />
@@ -48,11 +45,7 @@
           link-class="d-flex align-items-center"
           @click="handleProfile"
         >
-          <feather-icon
-            size="16"
-            icon="UserIcon"
-            class="mr-50"
-          />
+          <feather-icon size="16" icon="UserIcon" class="mr-50" />
           <span>Profile</span>
         </b-dropdown-item>
 
@@ -62,11 +55,7 @@
           link-class="d-flex align-items-center"
           @click="handleLogout"
         >
-          <feather-icon
-            size="16"
-            icon="LogOutIcon"
-            class="mr-50"
-          />
+          <feather-icon size="16" icon="LogOutIcon" class="mr-50" />
           <span>Logout</span>
         </b-dropdown-item>
       </b-nav-item-dropdown>
@@ -75,9 +64,7 @@
 </template>
 
 <script>
-import {
-  BLink, BNavbarNav, BNavItemDropdown, BDropdownItem, BDropdownDivider, BAvatar,
-} from 'bootstrap-vue'
+import { BLink, BNavbarNav, BNavItemDropdown, BDropdownItem, BDropdownDivider, BAvatar } from 'bootstrap-vue'
 import DarkToggler from '@core/layouts/components/app-navbar/components/DarkToggler.vue'
 
 export default {
@@ -97,21 +84,11 @@ export default {
     },
   },
   computed: {
-    account: {
-      get() {
-        return this.$store.getters['account/account']
-      },
-      set(data) {
-        this.$store.dispatch('account/setAccount', data)
-      },
+    account() {
+      return this.$store.getters['account/account']
     },
-    user: {
-      get() {
-        return this.$store.getters['user/user']
-      },
-      set(data) {
-        this.$store.dispatch('user/setUser', data)
-      },
+    user() {
+      return this.account.user
     },
   },
   methods: {
@@ -123,7 +100,7 @@ export default {
         await this.$root.$api.$sign.signOut()
         localStorage.removeItem('authorization')
         localStorage.removeItem('JWToken')
-        localStorage.removeItem('User')
+        localStorage.removeItem('UserKey')
         this.$router.push({ name: 'sign_in' })
         this.$store.dispatch('account/setAccount', {})
       } catch (error) {

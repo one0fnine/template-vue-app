@@ -1,12 +1,8 @@
 <template>
   <div class="auth-wrapper auth-v2">
     <b-row class="auth-inner m-0">
-
       <!-- Left Text-->
-      <b-col
-        lg="8"
-        class="d-none d-lg-flex align-items-center p-5"
-      >
+      <b-col lg="8" class="d-none d-lg-flex align-items-center p-5">
         <div class="w-100 d-lg-flex align-items-center justify-content-center px-5">
           <b-img
             fluid
@@ -18,16 +14,8 @@
       <!-- /Left Text-->
 
       <!-- Register-->
-      <b-col
-        lg="4"
-        class="d-flex align-items-center auth-bg px-2 p-lg-5"
-      >
-        <b-col
-          sm="8"
-          md="6"
-          lg="12"
-          class="px-xl-2 mx-auto"
-        >
+      <b-col lg="4" class="d-flex align-items-center auth-bg px-2 p-lg-5">
+        <b-col sm="8" md="6" lg="12" class="px-xl-2 mx-auto">
           <b-card-title class="mb-1">
             Adventure starts here 🚀
           </b-card-title>
@@ -35,29 +23,35 @@
             Make your app management easy and fun!
           </b-card-text>
 
-          <!-- form -->
-          <b-form
-            class="auth-register-form mt-2"
-          >
-            <!-- fullName -->
-            <b-form-group
-              label="Full Name"
-              label-for="register-full-name"
-            >
+          <!-- Form -->
+          <b-form class="auth-register-form mt-2">
+
+            <!-- First Name -->
+            <b-form-group label="First Name" label-for="register-first-name">
               <b-form-input
-                id="register-full-name"
-                v-model="account.user.fullName"
-                :state="!v$.account.user.fullName.$error"
-                name="register-full-name"
-                placeholder="johndoe"
+                id="register-first-name"
+                v-model="account.user.firstName"
+                :state="!v$.account.user.firstName.$error"
+                name="register-first-name"
+                placeholder="John"
               />
             </b-form-group>
+            <!-- /First Name -->
+
+            <!-- Last Name -->
+            <b-form-group label="Last Name" label-for="register-last-name">
+              <b-form-input
+                id="register-last-name"
+                v-model="account.user.lastName"
+                :state="!v$.account.user.lastName.$error"
+                name="register-last-name"
+                placeholder="Smith"
+              />
+            </b-form-group>
+            <!-- /Last Name -->
 
             <!-- Company Name -->
-            <b-form-group
-              label="Company Name"
-              label-for="register-company-name"
-            >
+            <b-form-group label="Company Name" label-for="register-company-name">
               <b-form-input
                 id="register-company-name"
                 v-model="account.company.name"
@@ -65,6 +59,7 @@
                 name="register-company-name"
               />
             </b-form-group>
+            <!-- /Company Name -->
 
             <!-- Company Consumer -->
             <b-form-group>
@@ -76,6 +71,7 @@
                 Consumer
               </b-form-checkbox>
             </b-form-group>
+            <!-- /Company Consumer -->
 
             <!-- Company Producer -->
             <b-form-group>
@@ -87,12 +83,10 @@
                 Producer
               </b-form-checkbox>
             </b-form-group>
+            <!-- /Company Producer -->
 
-            <!-- email -->
-            <b-form-group
-              label="Email"
-              label-for="register-email"
-            >
+            <!-- Email -->
+            <b-form-group label="Email" label-for="register-email">
               <b-form-input
                 id="register-email"
                 v-model="account.email"
@@ -101,21 +95,17 @@
                 placeholder="john@example.com"
               />
             </b-form-group>
+            <!-- /Email -->
 
-            <!-- password -->
-            <b-form-group
-              label-for="register-password"
-              label="Password"
-            >
-              <b-input-group
-                class="input-group-merge"
-              >
+            <!-- Password -->
+            <b-form-group label-for="register-password" label="Password">
+              <b-input-group class="input-group-merge">
                 <b-form-input
                   id="register-password"
                   v-model="account.password"
                   :state="!v$.account.password.$error"
-                  class="form-control-merge"
                   :type="passwordFieldType"
+                  class="form-control-merge"
                   name="register-password"
                   placeholder="············"
                 />
@@ -128,17 +118,22 @@
                 </b-input-group-append>
               </b-input-group>
             </b-form-group>
+            <!-- /Password -->
 
+            <!-- Form Buttons -->
             <b-button
-              variant="primary"
               block
-              type="button"
               :disabled="invalid"
+              variant="primary"
+              type="button"
               @click="handleFormSubmit"
             >
               Sign up
             </b-button>
+            <!-- /Form Buttons -->
+
           </b-form>
+          <!-- /Form-->
 
           <p class="text-center mt-2">
             <span>Already have an account?</span>
@@ -206,7 +201,11 @@ export default {
     return {
       account: {
         user: {
-          fullName: {
+          firstName: {
+            required,
+            $autoDirty: true,
+          },
+          lastName: {
             required,
             $autoDirty: true,
           },
@@ -245,7 +244,7 @@ export default {
           this.$root.$storage.setItem('authorization', authResponse.authorization)
           this.$root.$api.token = authResponse.authorization
           this.$root.$auth.updateAuthUserData(authResponse.account, authResponse.authorization)
-          await this.$store.dispatch('account/detail')
+          await this.$store.dispatch('account/setAccount', authResponse.account)
           this.$router.push({ name: 'home' })
         }
 			} catch (error) {

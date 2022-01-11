@@ -41,22 +41,20 @@
                   <small>Forgot Password?</small>
                 </b-link>
               </div>
-              <b-input-group
-                class="input-group-merge"
-              >
+              <b-input-group class="input-group-merge">
                 <b-form-input
                   id="login-password"
                   v-model="account.password"
                   :state="!v$.account.password.$error"
-                  class="form-control-merge"
                   :type="passwordFieldType"
+                  class="form-control-merge"
                   name="login-password"
                   placeholder="············"
                 />
                 <b-input-group-append is-text>
                   <feather-icon
-                    class="cursor-pointer"
                     :icon="passwordToggleIcon"
+                    class="cursor-pointer"
                     @click="togglePasswordVisibility"
                   />
                 </b-input-group-append>
@@ -65,9 +63,9 @@
 
             <!-- submit buttons -->
             <b-button
+              block
               type="button"
               variant="primary"
-              block
               @click="handleFormSubmit"
             >
               Sign in
@@ -138,14 +136,6 @@ export default {
     }
   },
   computed: {
-		user: {
-			get() {
-				return this.$store.getters['user/user']
-			},
-			set(data) {
-				this.$store.dispatch('user/setUser', data)
-			},
-		},
     passwordToggleIcon() {
       return this.passwordFieldType === 'password' ? 'EyeIcon' : 'EyeOffIcon'
     },

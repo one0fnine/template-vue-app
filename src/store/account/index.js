@@ -19,7 +19,7 @@ export default {
 			const account = new Account(data.data, data.included)
 			commit('SET_ACCOUNT', account)
 		},
-		
+
 		async detail({ commit }) {
 			try {
 				const response = await API.$account.detail()
@@ -31,7 +31,7 @@ export default {
 				console.error(e.message)
 			}
 		},
-		
+
 		async update({ commit }, data) {
 			try {
 				const response = await API.$account.update(data)

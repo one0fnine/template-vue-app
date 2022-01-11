@@ -1,21 +1,23 @@
 <template>
   <div id="user-profile">
     <b-row>
-      <b-col md="6">
+      <b-col md="12">
         <b-row>
           <b-col md="6" class="mb-2">
-            <FormInputGroup :model.sync="account.email" label="Email" disabled="disabled" />
+            <FormInputGroup :model.sync="account.user.firstName" label="First Name" />
           </b-col>
           <b-col md="6" class="mb-2">
-            <FormInputGroup :model.sync="account.user.fullName" label="Full Name" />
+            <FormInputGroup :model.sync="account.user.lastName" label="Last Name" />
           </b-col>
           <b-col md="6" class="mb-2">
             <FormInputGroup :model.sync="account.company.name" label="Company Name" />
           </b-col>
+          <b-col md="6" class="mb-2">
+            <FormInputGroup :model.sync="account.email" label="Email" disabled="disabled" />
+          </b-col>
           <b-col md="12" class="mb-2">
             <FormImageGroup
-              :key="updater"
-              :model="imagePreview"
+              :model="account.image.url"
               label="Profile Image"
               @update:image="onPickImage"
               @delete:image="onDeleteImage"
@@ -24,7 +26,6 @@
         </b-row>
       </b-col>
     </b-row>
-
     <b-row>
       <b-col md="12" class="mt-50">
         <b-button
@@ -61,39 +62,24 @@ export default {
 		FormInputGroup,
 		FormImageGroup,
   },
-  data() {
-    return {
-			file: null,
-      imagePreview: null,
-      updater: 0,
-    }
-  },
 	computed: {
 		account() {
       return this.$store.getters['account/account']
 		},
 	},
-  mounted() {
-    this.imagePreview = this.account.photo.previewResourceUrl
-    this.updater += 1
-  },
   methods: {
     onDeleteImage() {
-      this.account.photo._destroy = true
+      this.account.image.url = null
+      this.account.image._destroy = true
     },
 
     onPickImage(e) {
-      this.imagePreview = e.imageData
-      this.imageName = e.fileName
-      this.signedId = e.signedId
-      this.account.photo._destroy = false
+      this.account.image.url = e.url
+      this.account.image.resource = e.resource
+      this.account.image._destroy = false
     },
 
 		async update() {
-      if (this.signedId) {
-        this.account.signedId = this.signedId
-      }
-      this.imageName = null
 			try {
 				await this.$store.dispatch('account/update', { data: this.account.toUpdateJSON() })
 			} catch (err) {

@@ -11,14 +11,7 @@
       class="header-navbar navbar navbar-shadow align-items-center"
       :class="[navbarTypeClass]"
     >
-      <slot
-        name="navbar"
-        :toggleVerticalMenuActive="toggleVerticalMenuActive"
-        :navbarBackgroundColor="navbarBackgroundColor"
-        :navbarTypeClass="[...navbarTypeClass, 'header-navbar navbar navbar-shadow align-items-center']"
-      >
-        <app-navbar-vertical-layout :toggle-vertical-menu-active="toggleVerticalMenuActive" />
-      </slot>
+      <slot name="navbar" />
     </b-navbar>
     <!--/ Navbar -->
 
@@ -86,7 +79,6 @@
 
 <script>
 import { onUnmounted } from '@vue/composition-api'
-import AppNavbarVerticalLayout from '@core/layouts/components/app-navbar/AppNavbarVerticalLayout.vue'
 import AppFooter from '@core/layouts/components/AppFooter.vue'
 import useAppConfig from '@core/app-config/useAppConfig'
 import { BNavbar } from 'bootstrap-vue'
@@ -100,7 +92,6 @@ import mixinVerticalLayout from './mixinVerticalLayout'
 export default {
   components: {
     // AppBreadcrumb,
-    AppNavbarVerticalLayout,
     AppFooter,
     VerticalNavMenu,
     BNavbar,

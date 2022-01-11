@@ -8,9 +8,9 @@ export default class Company {
   _consumer = false
 
   _producer = false
-	
+
 	_location = null
-	
+
 	_apiKey = null
 
   constructor(data, included) {
@@ -47,8 +47,8 @@ export default class Company {
 
   toJSON() {
     return {
+      type: this.type,
 			id: this.id,
-			type: this.type,
 			attributes: {
 				name: this.name,
 				consumer: this.consumer,
@@ -59,8 +59,8 @@ export default class Company {
 
   toUpdateJSON() {
     return {
+      type: this.type,
 			id: this.id,
-			type: this.type,
 			attributes: {
 				name: this.name,
 			},

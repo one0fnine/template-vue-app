@@ -1,5 +1,3 @@
-import Attachment from '@/models/Attachment'
-
 export default class User {
   _type = 'users'
 
@@ -10,8 +8,6 @@ export default class User {
   _firstName = null;
 
   _lastName = null;
-
-  _phone = new Attachment();
 
   constructor(data, included) {
     this.updateUser(data, included)
@@ -25,10 +21,10 @@ export default class User {
     if (data) {
       this._id = data.id
       const attrs = data.attributes
+      const [firstName, lastName] = attrs.full_name.split(' ')
+      this._firstName = firstName
+      this._lastName = lastName
       this._fullName = attrs.full_name
-      this._firstName = attrs.first_name
-      this._lastName = attrs.last_name
-      this._phone = attrs._phone
     }
   }
 
@@ -50,26 +46,22 @@ export default class User {
 
   set lastName(value) { this._lastName = value }
 
-  get phone() { return this._phone }
-
-  set phone(value) { this._phone = value }
-
   toJSON() {
     return {
+      type: this.type,
 			id: this.id,
-			type: this.type,
 			attributes: {
-				full_name: this.fullName,
+				full_name: `${this.firstName} ${this.lastName}`,
 			},
     }
   }
-	
+
 	toUpdateJSON() {
 		return {
+      type: this.type,
 			id: this.id,
-			type: this.type,
 			attributes: {
-				full_name: this.fullName,
+				full_name: `${this.firstName} ${this.lastName}`,
 			},
 		}
 	}

@@ -1,7 +1,7 @@
 import User from '@/models/User'
 
 export default class AuthAPI {
-	__localStorageUserKey = 'User'
+	__localStorageUserKey = 'UserKey'
 
 	__localStorageTokenKey = 'JWToken'
 
