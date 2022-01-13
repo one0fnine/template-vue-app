@@ -147,6 +147,10 @@ export default class Account {
   toUpdateJSON() {
     const user = new RelationshipsItem('users', this.userID)
     const company = new RelationshipsItem('companies', this.companyID)
+
+    this.company.id = this.companyID
+    this.user.id = this.userID
+
 		const userInc = this.user.toUpdateJSON()
 		const companyInc = this.company.toUpdateJSON()
 

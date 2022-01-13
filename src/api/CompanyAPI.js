@@ -24,7 +24,7 @@ export default class CompanyAPI extends BasicAPI {
 		return null
 	}
 
-	async create({ data }) {
+	async create(data) {
 		const response = await this.axios.post('/companies', data, this.authHeaders)
 			.catch((error) => {
 				throw new ErrorAPI('$company.create', error.response)

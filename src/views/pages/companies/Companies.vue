@@ -154,10 +154,10 @@ export default {
       this.isModalActive = false
       try {
         if (this.type === 'create') {
-          const data = this.company.toJSON($event)
-          await this.$root.$store.dispatch('company/create', { data })
+          const data = { data: this.company.toNewJSON($event) }
+          await this.$root.$store.dispatch('company/create', data)
         } else {
-          const data = { id: this.company.id, data: this.company.toUpdateJSON($event) }
+          const data = { id: this.company.id, data: { data: this.company.toUpdateJSON($event) } }
           await this.$root.$store.dispatch('company/update', data)
         }
       } catch (err) {

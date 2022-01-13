@@ -46,6 +46,7 @@ const router = new VueRouter({
   ],
 })
 
+const publicPages = ['sign_up', 'sign_in']
 // ? For splash screen
 // Remove afterEach hook if you are not using splash screen
 router.afterEach(() => {
@@ -53,6 +54,15 @@ router.afterEach(() => {
   const appLoading = document.getElementById('loading-bg')
   if (appLoading) {
     appLoading.style.display = 'none'
+  }
+})
+
+router.beforeEach(async (to, from, next) => {
+  const isAuthenticated = !!localStorage.getItem('JWToken')
+  if (!isAuthenticated && !publicPages.includes(to.name)) {
+    next({ name: 'sign_up' })
+  } else {
+    next()
   }
 })
 

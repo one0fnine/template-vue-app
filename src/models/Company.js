@@ -57,26 +57,36 @@ export default class Company {
   set social(value) { this._social = value }
 
   toJSON(attributes) {
+    const attr = attributes || {}
     return {
-      data: {
-        type: this.type,
-        attributes: {
-          name: this.name,
-          ...attributes,
-        },
+      type: this.type,
+      id: this.id,
+      attributes: {
+        name: this.name,
+        ...attr,
+      },
+    }
+  }
+
+  toNewJSON(attributes) {
+    const attr = attributes || {}
+    return {
+      type: this.type,
+      attributes: {
+        name: this.name,
+        ...attr,
       },
     }
   }
 
   toUpdateJSON(attributes) {
+    const attr = attributes || {}
     return {
-      data: {
-        type: this.type,
-        id: this.id,
-        attributes: {
-          name: this.name,
-          ...attributes,
-        },
+      type: this.type,
+      id: this.id,
+      attributes: {
+        name: this.name,
+        ...attr,
       },
     }
   }
