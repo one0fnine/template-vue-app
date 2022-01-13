@@ -50,8 +50,8 @@ export default class CompanyAPI extends BasicAPI {
 		return null
 	}
 
-	async delete({ id, data }) {
-		const response = await this.axios.delete(`/companies/${id}`, data, this.authHeaders)
+	async delete({ id }) {
+		const response = await this.axios.delete(`/companies/${id}`, this.authHeaders)
 			.catch((error) => {
 				throw new ErrorAPI('$company.delete', error.response)
 			})

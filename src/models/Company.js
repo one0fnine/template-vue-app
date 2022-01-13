@@ -9,11 +9,11 @@ export default class Company {
 
   _producer = false
 
-	_location = null
+	_location = {}
 
 	_apiKey = null
 
-	_social = null
+	_social = {}
 
   constructor(data, included) {
 		this.parseData(data, included)
