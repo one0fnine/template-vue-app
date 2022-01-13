@@ -59,7 +59,7 @@
 import { useVuelidate } from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
 import { BButton } from 'bootstrap-vue'
-import FormInputGroup from '@/views/components/form/FormInputGroup.vue'
+import { FormInputGroup } from '@/views/components/form/'
 import Company from '@/models/Company'
 
 export default {

@@ -1,11 +1,10 @@
 <template>
   <div class="auth-wrapper auth-v2">
     <b-row class="auth-inner m-0">
-
       <!-- Left Text-->
       <b-col lg="8" class="d-none d-lg-flex align-items-center p-5">
         <div class="w-100 d-lg-flex align-items-center justify-content-center px-5">
-          <b-img :src="imgUrl" fluid alt="Login V2" />
+          <b-img :src="imgUrl" alt="Login V2" fluid />
         </div>
       </b-col>
       <!-- /Left Text-->
@@ -23,42 +22,32 @@
           <!-- form -->
           <b-form class="auth-login-form mt-2" @submit.prevent>
             <!-- email -->
-            <b-form-group label="Email" label-for="login-email">
-              <b-form-input
-                id="login-email"
-                v-model="account.email"
-                :state="!v$.account.email.$error"
-                name="login-email"
-                placeholder="john@example.com"
-              />
-            </b-form-group>
-
+            <FormInputGroup
+              :model.sync="account.email"
+              :state="!v$.account.email.$error"
+              label="Email"
+            />
+            <FormInputGroup
+              :model.sync="account.password"
+              :state="!v$.account.password.$error"
+              :type="passwordFieldType"
+              label="Password"
+            >
+              <template #append>
+                <feather-icon
+                  :icon="passwordToggleIcon"
+                  class="cursor-pointer"
+                  @click="togglePasswordVisibility"
+                />
+              </template>
+            </FormInputGroup>
             <!-- forgot password -->
             <b-form-group>
               <div class="d-flex justify-content-between">
-                <label for="login-password">Password</label>
                 <b-link :to="{name:'auth-forgot-password-v2'}">
                   <small>Forgot Password?</small>
                 </b-link>
               </div>
-              <b-input-group class="input-group-merge">
-                <b-form-input
-                  id="login-password"
-                  v-model="account.password"
-                  :state="!v$.account.password.$error"
-                  :type="passwordFieldType"
-                  class="form-control-merge"
-                  name="login-password"
-                  placeholder="············"
-                />
-                <b-input-group-append is-text>
-                  <feather-icon
-                    :icon="passwordToggleIcon"
-                    class="cursor-pointer"
-                    @click="togglePasswordVisibility"
-                  />
-                </b-input-group-append>
-              </b-input-group>
             </b-form-group>
 
             <!-- submit buttons -->
@@ -86,15 +75,13 @@
 </template>
 
 <script>
-import {
-	BRow, BCol, BLink, BFormGroup, BFormInput, BInputGroupAppend, BInputGroup,
-	BCardText, BCardTitle, BImg, BForm, BButton,
-} from 'bootstrap-vue'
+import { BRow, BCol, BLink, BFormGroup, BCardText, BCardTitle, BImg, BForm, BButton } from 'bootstrap-vue'
 import { togglePasswordVisibility } from '@core/mixins/ui/forms'
 import store from '@/store/index'
 import { useVuelidate } from '@vuelidate/core'
 import { email, required } from '@vuelidate/validators'
 import Account from '@/models/Account'
+import { FormInputGroup } from '@/views/components/form'
 
 export default {
   components: {
@@ -102,14 +89,12 @@ export default {
     BCol,
     BLink,
     BFormGroup,
-    BFormInput,
-    BInputGroupAppend,
-    BInputGroup,
     BCardText,
     BCardTitle,
     BImg,
     BForm,
     BButton,
+    FormInputGroup,
   },
   mixins: [togglePasswordVisibility],
   data() {

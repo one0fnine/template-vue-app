@@ -102,7 +102,6 @@ export default {
   },
   created() {
     this.$root.$config = config
-    this.$root.$user = null
     this.$root.$api = API
     this.$root.$api.init(this.$root)
     this.$root.$auth = new AuthAPI(this.$root.$api)

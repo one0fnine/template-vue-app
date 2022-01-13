@@ -50,8 +50,7 @@
 
 <script>
 import { BRow, BCol, BButton } from 'bootstrap-vue'
-import FormInputGroup from '@/views/components/form/FormInputGroup.vue'
-import FormImageGroup from '@/views/components/form/FormImageGroup.vue'
+import { FormInputGroup, FormImageGroup } from '@/views/components/form'
 
 export default {
 	name: 'Profile',

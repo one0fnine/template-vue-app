@@ -1,25 +1,26 @@
 <template>
   <b-form-group :label="label">
     <b-input-group>
-      <template v-if="hasSlotAppend" #append>
-        <slot name="append" />
-      </template>
       <b-form-input
         v-model="model"
         :state="state"
+        :type="type"
         @input="update"
       />
+      <b-input-group-append v-if="hasSlotAppend" is-text>
+        <slot name="append" />
+      </b-input-group-append>
     </b-input-group>
   </b-form-group>
 </template>
 
 <script>
-import { BFormGroup, BInputGroup, BFormInput } from 'bootstrap-vue'
+import { BFormGroup, BInputGroup, BFormInput, BInputGroupAppend } from 'bootstrap-vue'
 
 export default {
 	name: 'FormInputGroup',
 	emits: ['input', 'update:model'],
-	components: { BFormGroup, BInputGroup, BFormInput },
+	components: { BFormGroup, BInputGroup, BFormInput, BInputGroupAppend },
 	props: {
 		model: {
 			type: String,
@@ -32,6 +33,10 @@ export default {
 		label: {
 			type: String,
 			default: '',
+		},
+    type: {
+			type: String,
+			default: 'text',
 		},
 	},
 	computed: {
