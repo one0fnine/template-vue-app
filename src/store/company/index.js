@@ -58,9 +58,9 @@ export default {
 			}
 		},
 
-		async detail({ commit }) {
+		async detail({ commit }, data) {
 			try {
-				const response = await API.$company.detail()
+				const response = await API.$company.detail(data)
 				if (response) {
 					const company = new Company(response.data, response.included)
 					commit('SET_COMPANY', company)

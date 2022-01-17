@@ -118,9 +118,9 @@ export default {
     this.isLoading = false
   },
   methods: {
-    onEdit($event) {
+    async onEdit($event) {
       this.type = 'edit'
-      this.$store.getters['company/companyById']($event.id)
+      await this.$store.dispatch('company/detail', { id: $event.id })
       this.isModalActive = true
     },
     onCreate() {
