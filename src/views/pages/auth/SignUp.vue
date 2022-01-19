@@ -206,7 +206,7 @@ export default {
           this.$root.$storage.setItem('authorization', authResponse.authorization)
           this.$root.$api.token = authResponse.authorization
           this.$root.$auth.updateAuthUserData(authResponse.account, authResponse.authorization)
-          await this.$store.dispatch('account/setAccount', authResponse.account)
+          await this.$store.dispatch('account/detail')
           this.$router.push({ name: 'home' })
         }
 			} catch (error) {
