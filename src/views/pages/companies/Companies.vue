@@ -20,6 +20,7 @@
             :busy="isLoading"
             :items="companies"
             :fields="['name', 'address', 'facebook', 'instagram', 'twitter', 'actions']"
+            table-class="mb-3"
             responsive
             striped
             bordered
